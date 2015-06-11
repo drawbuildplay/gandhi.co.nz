@@ -1,0 +1,99 @@
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Amit &amp; Fritzi</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+
+   <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+  <div id="content" class="toggled">
+      {{> nav}}
+      {{> header}}
+      {{> about}}
+      {{> services}}
+      {{> footer}}
+    </div> <!-- content -->
+  </body>
+
+<template name="nav">
+    <nav class="navbar navbar-inverse" role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+              <ul class="nav navbar-nav">
+                <li class="active"><a href="/">A&amp;F</a></li>
+              </ul>
+            </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+    </nav>
+</template>
+
+
+<template name="header">
+    <!-- Header -->
+    <header id="top" class="header">
+        <!-- Main jumbotron for a primary marketing message or call to action -->
+        <div class="jumbotron">
+          <div class="container">
+            <img src="/img/feature.jpg" width="100%" />
+          </div>
+        </div>
+    </header>
+</template>
+
+<template name="services">
+    
+</template>
+
+<template name="about">
+    <!-- About -->
+    <section id="about" class="about">
+        <a id="about"></a>
+        <div class="container">
+            <!-- Example row of columns -->
+            <div class="row">
+                <div class="col-md-4">
+                  <h2>Amit</h2>
+                  <p>CEO @ <a href="http://www.drawbuildplay.com">DrawBuildPlay</a></p>
+                  <p>An expert software developer who excels at designing, developing, and deploying innovative new products on the cloud.</p>
+                  <p><a class="btn btn-default" href="https://www.linkedin.com/in/amitgandhinz" role="button" target="_blank">View details &raquo;</a></p>
+                </div>
+                <div class="col-md-4">
+                  <h2>Fritzi</h2>
+                  <p>Web Designer/Developer @ <a href="http://www.drawbuildplay.com">DrawBuildPlay</a></p>
+                  <p>A creative designer and developer with a detailed eye for design. Fritzi prioritizes user interaction and user flow over flashy designs, with a keen focus on usability to achieve simple solutions for complex problems.</p>
+                  <p><a class="btn btn-default" href="https://www.linkedin.com/in/fritzigandhi" role="button" target="_blank">View details &raquo;</a></p>
+                </div>
+            </div>
+        </div> <!-- /container -->
+    </section>
+</template>
+
+<template name="portfolio">
+    
+</template>
+
+<template name="footer">
+    <hr>
+    <div class="container">
+
+        <footer>
+            <p>&copy; Amit Gandhi, 2015</p>
+        </footer>
+    </div> 
+</template>
+

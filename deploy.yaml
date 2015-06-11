@@ -1,0 +1,62 @@
+heat_template_version: 2013-05-23
+
+description: This template deploys a single instance server.
+
+parameters:
+  web_nodes_count:
+    type: number
+    description: Number of web heads to use
+
+resources:
+  web:
+    type: OS::Heat::ResourceGroup
+    properties:
+      count: { get_param: web_nodes_count }
+      resource_def:
+        type: OS::Nova::Server
+        properties:
+          name: drawbuildplay_%index%
+          image: Ubuntu 14.04 LTS (Trusty Tahr) (PV)
+          flavor: 512MB Standard Instance
+          user_data_format: RAW
+          user_data:
+            str_replace:
+              params:
+                username: 'gandhi'
+              template: |
+                #!/bin/bash -ex
+
+                # Updates
+                apt-get update
+                apt-get -qqy install nginx
+
+                # download docker
+                curl -sSL https://get.docker.io/ubuntu/ | sudo sh
+
+                # create a website user to run the server process
+                adduser --disabled-password --gecos "" gandhi
+
+                docker pull drawbuildplay/gandhi
+                docker pull drawbuildplay/drawbuildplay
+                docker run -d -p 8081:80 -i drawbuildplay/gandhi
+
+                # configure nginx as the front-end web server with a reverse proxy
+                # rule to the docker server
+                cat >/etc/nginx/sites-available/gandhi <<EOF
+                server {
+                    listen 80;
+                    server_name _;
+                    access_log /var/log/nginx/gandhi.co.nz.access.log;
+                    error_log /var/log/nginx/gandhi.co.nz.error.log;
+                    location / {
+                        proxy_pass http://0.0.0.0:8081;
+                        proxy_redirect off;
+                        proxy_set_header Host \$host;
+                        proxy_set_header X-Real-IP \$remote_addr;
+                        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+                    }
+                }
+                EOF
+                rm -f /etc/nginx/sites-enabled/default
+                ln -s /etc/nginx/sites-available/gandhi /etc/nginx/sites-enabled/
+                service nginx restart
