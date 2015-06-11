@@ -36,16 +36,35 @@ resources:
                 # create a website user to run the server process
                 adduser --disabled-password --gecos "" gandhi
 
-                docker pull drawbuildplay/gandhi
                 docker pull drawbuildplay/drawbuildplay
-                docker run -d -p 8081:80 -i drawbuildplay/gandhi
+                docker pull drawbuildplay/gandhi.co.nz
+                docker run -d -p 8080:80 -i drawbuildplay/drawbuildplay
+                docker run -d -p 8081:80 -i drawbuildplay/gandhi.co.nz
+
+                # configure nginx as the front-end web server with a reverse proxy
+                # rule to the docker server
+                cat >/etc/nginx/sites-available/drawbuildplay <<EOF
+                server {
+                    listen 80;
+                    server_name drawbuildplay.com;
+                    access_log /var/log/nginx/drawbuildplay.access.log;
+                    error_log /var/log/nginx/drawbuildplay.error.log;
+                    location / {
+                        proxy_pass http://0.0.0.0:8080;
+                        proxy_redirect off;
+                        proxy_set_header Host \$host;
+                        proxy_set_header X-Real-IP \$remote_addr;
+                        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+                    }
+                }
+                EOF
 
                 # configure nginx as the front-end web server with a reverse proxy
                 # rule to the docker server
                 cat >/etc/nginx/sites-available/gandhi <<EOF
                 server {
                     listen 80;
-                    server_name _;
+                    server_name gandhi.co.nz;
                     access_log /var/log/nginx/gandhi.co.nz.access.log;
                     error_log /var/log/nginx/gandhi.co.nz.error.log;
                     location / {
@@ -58,5 +77,6 @@ resources:
                 }
                 EOF
                 rm -f /etc/nginx/sites-enabled/default
+                ln -s /etc/nginx/sites-available/drawbuildplay /etc/nginx/sites-enabled/
                 ln -s /etc/nginx/sites-available/gandhi /etc/nginx/sites-enabled/
                 service nginx restart
